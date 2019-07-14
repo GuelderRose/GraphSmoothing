@@ -4,8 +4,8 @@
 using namespace std;
 int main()
 {
-	string way = "D:\\Универская фигота\\Практика\\way.txt";
-	string modifiedWay = "D:\\Универская фигота\\Практика\\modifiedWay.txt";
+	string way = "D:\\Г“Г­ГЁГўГҐГ°Г±ГЄГ Гї ГґГЁГЈГ®ГІГ \\ГЏГ°Г ГЄГІГЁГЄГ \\way.txt";
+	string modifiedWay = "D:\\Г“Г­ГЁГўГҐГ°Г±ГЄГ Гї ГґГЁГЈГ®ГІГ \\ГЏГ°Г ГЄГІГЁГЄГ \\modifiedWay.txt";
 	int delnumber = 3;
 	//Obrabotka(way, modifiedWay, delnumber);
 	vector<double> x1{ 1.5,6 };
