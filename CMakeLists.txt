@@ -1,2 +1,0 @@
-PROJECT ( Way )
-ADD_SUBDIRECTORY( Sourse )
