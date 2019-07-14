@@ -9,7 +9,7 @@
 
 void OpenFile(vector<double>& x, vector<double>& y, string way)
 {
-	//чтение данных из файла
+	//Г·ГІГҐГ­ГЁГҐ Г¤Г Г­Г­Г»Гµ ГЁГ§ ГґГ Г©Г«Г 
 	ifstream input;
 	string X;
 	string Y;
@@ -24,7 +24,7 @@ void OpenFile(vector<double>& x, vector<double>& y, string way)
 		std::cout << "Y: " << Y << endl;
 	}
 	input.close();
-	//запись координат точек в векторы
+	//Г§Г ГЇГЁГ±Гј ГЄГ®Г®Г°Г¤ГЁГ­Г ГІ ГІГ®Г·ГҐГЄ Гў ГўГҐГЄГІГ®Г°Г»
 	stringstream stringStream1(X);
 	stringstream stringStream2(Y);
 	string number;
@@ -223,18 +223,18 @@ void Obrabotka(string way, string modifiedWay, int delnumber)
 			cout << y[i] << "    ";
 		}
 		cout << endl << endl;
-		//вектор площадей, которые потенциально можно удалить
+		//ГўГҐГЄГІГ®Г° ГЇГ«Г®Г№Г Г¤ГҐГ©, ГЄГ®ГІГ®Г°Г»ГҐ ГЇГ®ГІГҐГ­Г¶ГЁГ Г«ГјГ­Г® Г¬Г®Г¦Г­Г® ГіГ¤Г Г«ГЁГІГј
 		double ssum;
 		vector<double> s = VecPloshad(x, y, &ssum);
 		cout << endl << endl;
-		//вектор удалённых площадей
+		//ГўГҐГЄГІГ®Г° ГіГ¤Г Г«ВёГ­Г­Г»Гµ ГЇГ«Г®Г№Г Г¤ГҐГ©
 		vector<double> dels;
-		//удаление площадей
+		//ГіГ¤Г Г«ГҐГ­ГЁГҐ ГЇГ«Г®Г№Г Г¤ГҐГ©
 		for (int i = 0; i < delnumber; i++)
 		{
 			Delete(s, x, y, dels, ssum);
 		}
-		//вывод данных для проверки
+		//ГўГ»ГўГ®Г¤ Г¤Г Г­Г­Г»Гµ Г¤Г«Гї ГЇГ°Г®ГўГҐГ°ГЄГЁ
 		cout << endl;
 		for (int i = 0; i < x.size(); i++)
 		{
@@ -255,7 +255,7 @@ void Obrabotka(string way, string modifiedWay, int delnumber)
 		{
 			cout << dels[i] << "    ";
 		}
-		//запись обработанных данных в файл
+		//Г§Г ГЇГЁГ±Гј Г®ГЎГ°Г ГЎГ®ГІГ Г­Г­Г»Гµ Г¤Г Г­Г­Г»Гµ Гў ГґГ Г©Г«
 		ofstream output;
 		output.open(modifiedWay);
 		if (output.is_open())
