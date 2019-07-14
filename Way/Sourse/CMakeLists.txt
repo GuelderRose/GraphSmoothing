@@ -1,0 +1,1 @@
+ADD_EXECUTABLE( Way Way.cpp Main.cpp WayHeader.h )
