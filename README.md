@@ -1,1 +1,1 @@
-Проект в папке Project1 
+Проект в папке Project2, тестовые файлы в папке TestsForProject
