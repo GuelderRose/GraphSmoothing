@@ -25,13 +25,41 @@ void MainWindow::OpenFile(QVector<Point>& point, const QString way)
        if(file.open(QIODevice::ReadOnly |QIODevice::Text)) {
            while(!file.atEnd()) {
                QString str = file.readLine();
-               QStringList k = str.split(" ");
-                qDebug() << k.at(0) << k.at(1);
+               QStringList k = str.split(" "); 
+               if(k.size()!=2){
+                    QMessageBox msgBox;
+                    msgBox.setText("Неверные символы");
+                    msgBox.exec();
+                    break;
+               }
+               qDebug() << k.at(0) << k.at(1);
+                QString xstr=k.at(0); QString ystr=k.at(1);
+                int d1=0,d2=0;
+                for (int i =0;i<xstr.size();i++){
+                    if (!(xstr[i].isDigit())&&(xstr[i]!=".")){
+                        d1=1;
+                    }
+                }
+                    for (int i =0;i<ystr.size()-1;i++){
+                        if (!(ystr[i].isDigit())&&(ystr[i]!=".")){
+                            d2=1;
+                        }
+                    }
+                    if(ystr[ystr.size()-1]!="\n"){
+                        d2=1;
+                    }
+                     if((d1==0)&&(d2==0)){
                 Point p(k.at(0).toDouble(),k.at(1).toDouble());
                 point.push_back(p);
+                     }else{
+                         QMessageBox msgBox;
+                         msgBox.setText("Неверные символы");
+                         msgBox.exec();
+                         break;
+                     }
            }
        } else {
-              qDebug()<< "Can't open this file";
+              qDebug()<< "Ошибка при открытии файла";
           }
 }
 
@@ -42,14 +70,43 @@ void MainWindow::OpenFile(QVector<Point>& point, const QString way, QVector<Poin
            while(!file.atEnd()) {
                QString str = file.readLine();
                QStringList k = str.split(" ");
+               if(k.size()!=2){
+                    QMessageBox msgBox;
+                    msgBox.setText("Неверные символы");
+                    msgBox.exec();
+                    break;
+               }
                 qDebug() << k.at(0) << k.at(1);
+                QString xstr=k.at(0); QString ystr=k.at(1);
+                int d1=0,d2=0;
+                for (int i =0;i<xstr.size();i++){
+                    if (!(xstr[i].isDigit())&&(xstr[i]!=".")){
+                        d1=1;
+                    }
+                }
+                    for (int i =0;i<ystr.size()-1;i++){
+                        if (!(ystr[i].isDigit())&&(ystr[i]!=".")){
+                            d2=1;
+                        }
+                    }
+                    if(ystr[ystr.size()-1]!="\n"){
+                        d2=1;
+                    }
+
+                    if((d1==0)&&(d2==0)){
                 Point p(k.at(0).toDouble(),k.at(1).toDouble());
                 point.push_back(p);
                 Point p1(k.at(0).toDouble(),k.at(1).toDouble());
                 point1.push_back(p1);
+                    } else{
+                        QMessageBox msgBox;
+                        msgBox.setText("Неверные символы");
+                        msgBox.exec();
+                        break;
+                    }
            }
        } else {
-              qDebug()<< "Can't open this file";
+              qDebug()<< "Ошибка при открытии файла";
           }
 }
 
@@ -57,7 +114,6 @@ QVector <double> MainWindow::IntersectionPoint(const double x1, const double y1,
     QVector <double> PointCoordinates;
     double k1,k2,c1,c2;
         double p,f;
-       // if((x1<x3)&&(x2>x3))
         if (x1 == x2){
             k1=0;
             c1=0;
@@ -274,7 +330,7 @@ void MainWindow::Delete(const double DevArea, QVector <Point> &point,QVector <do
     s.erase(s.begin() + j);
     if (s.size() == 0) {
         QMessageBox msgBox;
-        msgBox.setText("Two points left");
+        msgBox.setText("Осталось только две точки");
         msgBox.exec();
     } else {
         if (s.size() == j) {
@@ -326,7 +382,7 @@ void MainWindow::on_pushButton_clicked()
 {
     if ((way=="")||(modifiedWay=="")){
         QMessageBox msgBox;
-        msgBox.setText("You did not select a source file or recording file");
+        msgBox.setText("Вы не выбрали исходный файл или файл для записи");
         msgBox.exec();
     } else{
     point.clear();
@@ -341,6 +397,61 @@ void MainWindow::on_pushButton_clicked()
     //Открытие файла с исходными данными
     OpenFile(point,way,point1);
     //Зеркальное отражение координат, если начальная координата больше конечной
+    if (point.size()<2){
+        if(point.size()==0){
+            QMessageBox msgBox;
+            msgBox.setText("Введите координаты точек");
+            msgBox.exec();
+        } else{
+            double dx=450/point[0].x;
+            double dy=300/point[0].y;
+            int divx=point[0].x/30;
+            int divy=point[0].y/30;
+
+            for (int i = 0;i < point[0].x/(divx+1)+1; i++) {
+               scene->addLine(i*(dx*(divx+1)),-3,i*(dx*(divx+1)),3,pen);
+            }
+            for (int i = 0;i < point[0].y/(divy+1)+1; i++) {
+               scene->addLine(-3,-i*(dy*(divy+1)),3,-i*(dy*(divy+1)),pen);
+            }
+
+            QString str;
+            for (int i = 0;i < ((point[0].x/30)*30+1)/(divx+1); i++) {
+               str=QString::number(i*(divx+1));
+               QGraphicsTextItem *text = scene->addText(str);
+               text->setPos(i*(divx+1)*dx-6, 5);
+            }
+            for (int i = 1;i < ((point[0].y/30)*30+1)/(divy+1); i++) {
+               str=QString::number(i*(divy+1));
+               QGraphicsTextItem *text = scene->addText(str);
+               text->setPos(-20,-(i*(divy+1)*dy)-10);
+            }
+
+            QPen pen2(Qt::green);
+            QPen pen3(Qt::cyan);
+            pen3.setWidth(3);
+            scene->addEllipse(point[0].x*dx,-point[0].y*dy,3,3, pen3);
+
+            ui->graphicsView_2->setScene(scenewithpoints);
+            scenewithpoints->addLine(0,0,518,0,pen);
+            scenewithpoints->addLine(38,-34,38,34,pen);
+            QGraphicsTextItem *textX = scenewithpoints->addText("X");
+            textX->setPos(10,-28);
+            QGraphicsTextItem *textY = scenewithpoints->addText("Y");
+            textY->setPos(10,8);
+            double d=240;
+               scenewithpoints->addLine(38+1*d,-34,38+1*d,34,pen);
+            QString strx,stry;
+            QGraphicsTextItem *text;
+
+               strx=QString::number(point[0].x);
+               stry=QString::number(point[0].y);
+               text = scenewithpoints->addText(strx);
+               text->setPos(38+(d/8),-28);
+               text = scenewithpoints->addText(stry);
+               text->setPos(38+(d/8),8);
+        }
+    } else{
     if(point[0].x>point[point.size()-1].x){
         for (int i = 0;i < point.size(); i++) {
             point[i].x*=-1;
@@ -369,6 +480,7 @@ void MainWindow::on_pushButton_clicked()
         {point[i].y-=ymin;}
         ymax-=ymin; ymin=0;
     }
+    point1=point;
     //Добавление делений на оси
     double dx=450/xmax;
     int divx=xmax/30;
@@ -436,6 +548,7 @@ void MainWindow::on_pushButton_clicked()
     AreaGraph();
     AreaGraph();
     }
+    }
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -450,7 +563,7 @@ void MainWindow::on_pushButton_3_clicked()
 {
     if ((way=="")||(modifiedWay=="")){
         QMessageBox msgBox;
-        msgBox.setText("You did not select a source file or recording file");
+        msgBox.setText("Вы не выбрали исходный файл или файл для записи");
         msgBox.exec();
     } else{
     int delnumber=ui->lineEdit->text().toInt();
@@ -460,11 +573,11 @@ void MainWindow::on_pushButton_3_clicked()
     if ((delnumber > point.size() - 2)||(delnumber > point.size()<0)) {
         if (delnumber > point.size() - 2){
             QMessageBox msgBox;
-            msgBox.setText("Choose fewer points");
+            msgBox.setText("Выберете меньшее количество точек");
             msgBox.exec();}
         else{
             QMessageBox msgBox;
-            msgBox.setText("The number should be positive");
+            msgBox.setText("Количество точек должно быть положительным числом");
             msgBox.exec();
         }
         } else {
@@ -503,7 +616,7 @@ void MainWindow::on_pushButton_4_clicked()
 {
     if ((way=="")||(modifiedWay=="")){
         QMessageBox msgBox;
-        msgBox.setText("You did not select a source file or recording file");
+        msgBox.setText("Вы не выбрали исходный файл или файл для записи");
         msgBox.exec();
     } else{
     double coordx=ui->lineEdit_2->text().toDouble();
@@ -531,6 +644,9 @@ void MainWindow::on_pushButton_4_clicked()
             d3=1;
         }
     }
+    if((position>point.size()-1)||(position<0)){
+        d1=1;
+    }
     if((d1==0)&&(d2==0)&&(d3==0)){
         Point p(coordx,coordy);
         point.insert(point.begin()+position,p);
@@ -548,11 +664,13 @@ void MainWindow::on_pushButton_4_clicked()
                s.clear();
                way=savedWay;
                on_pushButton_clicked();
+               if (point.size()>2){
                AreaGraph();
                AreaGraph();
+               }
         }else{
             QMessageBox msgBox;
-            msgBox.setText("Not all data entered or invalid characters entered");
+            msgBox.setText("Введены не все данные или неверные символы");
             msgBox.exec();
         }
     }
@@ -571,7 +689,7 @@ void MainWindow::on_pushButton_5_clicked()
          delnum=-1;
          on_pushButton_clicked();
          QMessageBox msgBox;
-         msgBox.setText("Nothing to cancel");
+         msgBox.setText("Нечего отменять");
          msgBox.exec();
      } else {
      psaved.clear();
@@ -588,7 +706,7 @@ void MainWindow::on_pushButton_6_clicked()
 {
     if ((way=="")||(modifiedWay=="")){
         QMessageBox msgBox;
-        msgBox.setText("You did not select a source file or recording file");
+        msgBox.setText("Вы не выбрали исходный файл или файл для записи");
         msgBox.exec();
     } else{
     int position=ui->lineEdit_5->text().toInt();
@@ -601,6 +719,9 @@ void MainWindow::on_pushButton_6_clicked()
         if (!(positionstr[i].isDigit())){
             d=1;
         }
+    }
+    if((position>point.size()-1)||(position<0)){
+        d=1;
     }
     if(d==0){
     point.erase(point.begin()+position);
@@ -615,11 +736,13 @@ void MainWindow::on_pushButton_6_clicked()
            point.clear();
            s.clear();
            on_pushButton_clicked();
+           if(point.size()>2){
            AreaGraph();
            AreaGraph();
+           }
     } else{
         QMessageBox msgBox;
-        msgBox.setText("No data entered or invalid characters entered");
+        msgBox.setText("Введены не все данные или неверные символы");
         msgBox.exec();
     }
     }
@@ -627,6 +750,7 @@ void MainWindow::on_pushButton_6_clicked()
 
 void MainWindow::AreaGraph()
 {
+    point1=point;
     QGraphicsScene *scenewithgraph = new QGraphicsScene(ui->graphicsView_2);
     QPen pen(Qt::blue);
     QPen pen2(Qt::green);
