@@ -488,11 +488,18 @@ void MainWindow::on_pushButton_clicked()
     }
     point1=point;
     //Добавление делений на оси
-    double dx=450/xmax;
-    int divx=xmax/30;
-    double dy=300/ymax;
-    int divy=ymax/30;
-
+    double dx,dy;
+    int divx,divy;
+    dx=450/xmax;
+    divx=xmax/30;
+    dy=300/ymax;
+    divy=ymax/30;
+    if(xmax==0){
+        dx=0;
+    }
+    if(ymax==0){
+        dy=0;
+    }
     for (int i = 0;i < (xmax)/(divx+1)+1; i++) {
        scene->addLine(i*(dx*(divx+1)),-3,i*(dx*(divx+1)),3,pen);
     }
@@ -553,7 +560,7 @@ void MainWindow::on_pushButton_clicked()
     ui->lineEdit_6->setText(QString::number(DevArea));
     ui->lineEdit_7->setText(QString::number(length));
     OpenOutFile(point);
-    //AreaGraph();
+    AreaGraph();
     AreaGraph();
     LengthGraph();
     }
