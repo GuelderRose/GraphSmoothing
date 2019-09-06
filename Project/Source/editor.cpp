@@ -924,3 +924,4 @@ double MainWindow::Length(QVector <Point>& point)
     }
     return l;
 }
+
